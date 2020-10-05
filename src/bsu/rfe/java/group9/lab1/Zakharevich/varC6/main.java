@@ -84,9 +84,9 @@ public class main
             Arrays.sort(breakfast, new Comparator() {
                 public int compare(Object o1, Object o2)
                 {
-                    if (o1 == null || ((Food)o1).par > ((Food)o2).par)
+                    if (o1 == null || ((Food)o1).par < ((Food)o2).par)
                         return 1;
-                    if (o2 == null || ((Food)o1).par < ((Food)o2).par)
+                    if (o2 == null || ((Food)o1).par > ((Food)o2).par)
                         return -1;
                     else return 0;
                 }
