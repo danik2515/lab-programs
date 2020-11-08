@@ -30,7 +30,6 @@ public class GornerTableCellRenderer implements TableCellRenderer {
 // Россия/Беларусь дробная часть отделяется запятой
         DecimalFormatSymbols dottedDouble = formatter.getDecimalFormatSymbols();
         dottedDouble.setDecimalSeparator('.');
-
         formatter.setDecimalFormatSymbols(dottedDouble);
 // Разместить надпись внутри панели
         panel.add(label);
