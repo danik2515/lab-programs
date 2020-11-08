@@ -6,9 +6,7 @@ import java.awt.FlowLayout;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 public class GornerTableCellRenderer implements TableCellRenderer {
     private JPanel panel = new JPanel();
@@ -40,15 +38,19 @@ public class GornerTableCellRenderer implements TableCellRenderer {
 // Преобразовать double в строку с помощью форматировщика
         String formattedDouble = formatter.format(value);
 // Установить текст надписи равным строковому представлению числа
-        label.setText(formattedDouble);
+
         if (col==1 && needle!=null && needle.equals(formattedDouble)) {
 // Номер столбца = 1 (т.е. второй столбец) + иголка не null
 // (значит что-то ищем) +
 // значение иголки совпадает со значением ячейки таблицы -
-// окрасить задний фон панели в красный цвет
-            panel.setBackground(Color.RED);
+// то флажок
+            JCheckBox Check = new JCheckBox();
+            Check.setBackground(Color.WHITE);
+            Check.doClick();
+            return Check;
         } else {
 // Иначе - в обычный белый
+            label.setText(formattedDouble);
             panel.setBackground(Color.WHITE);
         }
         return panel;

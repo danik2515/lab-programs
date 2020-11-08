@@ -80,5 +80,6 @@ public class GornerTableModel extends AbstractTableModel {
 
             return Double.class;
 
+            }
     }
-}
+
