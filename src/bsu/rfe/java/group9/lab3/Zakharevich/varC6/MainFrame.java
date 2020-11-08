@@ -1,15 +1,15 @@
 package bsu.rfe.java.group9.lab3.Zakharevich.varC6;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -29,7 +29,7 @@ import javax.swing.ImageIcon;
 
 import javax.swing.JTextField;
 @SuppressWarnings("serial")
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame  {
     // Константы с исходным размером окна приложения
     private static final int WIDTH = 700;
     private static final int HEIGHT = 500;
@@ -47,11 +47,13 @@ public class MainFrame extends JFrame {
     private JMenuItem searchValueMenuItem;
     private JMenuItem searchPalindromesMenuItem;
     private JMenuItem informationItem;
+    private JMenuItem commaSeparatedValues;
     ImageIcon icon = new ImageIcon("Author.jpg");
     // Поля ввода для считывания значений переменных
     private JTextField textFieldFrom;
     private JTextField textFieldTo;
     private JTextField textFieldStep;
+    private DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
     private Box hBoxResult;
     // Визуализатор ячеек таблицы
     private GornerTableCellRenderer renderer = new GornerTableCellRenderer();
@@ -104,6 +106,28 @@ public class MainFrame extends JFrame {
         };
 
         informationItem = infMenu.add(information);
+
+        Action saveToCVSAction = new AbstractAction("Сохранить в CSV-файл")
+        {
+            public void actionPerformed(ActionEvent arg0)  {
+                if (fileChooser == null){
+                    // Если диалоговое окно "Открыть файл" еще не создано,
+                    // то создать его
+                    fileChooser = new JFileChooser();
+                    // и инициализировать текущей директорией
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
+                    // Если результат его показа успешный, сохранить данные в  файл
+                    saveToCSVFile(fileChooser.getSelectedFile()) ;
+                }
+            }
+        };
+
+        // Добавить соответствующий пункт подменю в меню "Файл"
+        commaSeparatedValues = fileMenu.add(saveToCVSAction);
+        // По умолчанию пункт меню является недоступным (данных еще нет)
+        commaSeparatedValues.setEnabled(false);
 
 // Создать новое "действие" по сохранению в текстовый файл
 
@@ -177,6 +201,7 @@ public void actionPerformed(ActionEvent event) {
         searchValueMenuItem = tableMenu.add(searchValueAction);
 // По умолчанию пункт меню является недоступным (данных ещѐ нет)
         searchValueMenuItem.setEnabled(false);
+
 // Создать область с полями ввода для границ отрезка и шага
 // Создать подпись для ввода левой границы отрезка
         JLabel labelForFrom = new JLabel("X изменяется на интервале от:");
@@ -269,6 +294,7 @@ public void actionPerformed(ActionEvent ev) {
         saveToGraphicsMenuItem.setEnabled(true);
         searchValueMenuItem.setEnabled(true);
         searchPalindromesMenuItem.setEnabled(true);
+        commaSeparatedValues.setEnabled(true);
         } catch (NumberFormatException ex) {
 // В случае ошибки преобразования чисел показать сообщение об ошибке
         JOptionPane.showMessageDialog(MainFrame.this,
@@ -295,6 +321,7 @@ public void actionPerformed(ActionEvent ev) {
         saveToGraphicsMenuItem.setEnabled(false);
         searchValueMenuItem.setEnabled(false);
     searchPalindromesMenuItem.setEnabled(false);
+    commaSeparatedValues.setEnabled(false);
 // Обновить область содержания главного окна
         getContentPane().validate();
         }
@@ -336,12 +363,46 @@ protected void saveToGraphicsFile(File selectedFile) {
 // так как мы файл создаѐм, а не открываем для чтения
         }
         }
-protected void saveToTextFile(File selectedFile) {
+
+
+
+    protected void saveToCSVFile(File selectedFile)  {
+
+
+        try{
+            CSV.Writer writer = new CSV.Writer(selectedFile).delimiter(',');
+            DecimalFormat formatter = (DecimalFormat)NumberFormat.getInstance();
+            formatter.setMaximumFractionDigits(10);
+            formatter.setGroupingUsed(false);
+            DecimalFormatSymbols dottedDouble = formatter.getDecimalFormatSymbols();
+            dottedDouble.setDecimalSeparator('.');
+            formatter.setDecimalFormatSymbols(dottedDouble);
+            writer.value("Значение X");
+            writer.value("Значение многочлена");
+            writer.value("Через float");
+            writer.value("Разница");
+            writer.newLine();
+            for (int i = 0; i < data.getRowCount(); i++){
+                for(int k = 0; k < data. getColumnCount(); k++)
+                {
+                    writer.value(formatter.format(data.getValueAt(i, k)));
+                }
+                writer.newLine();
+            }
+            writer.close();
+        }catch(Exception e){
+
+        }
+
+    }
+
+
+
+    protected void saveToTextFile(File selectedFile) {
         try {
 // Создать новый символьный поток вывода, направленный в указанный файл
         PrintStream out = new PrintStream(selectedFile);
 // Записать в поток вывода заголовочные сведения
-
         out.println("Результаты табулирования многочлена по схеме Горнера");
         out.print("Многочлен: ");
         for (int i=0; i<coefficients.length; i++) {
@@ -364,7 +425,11 @@ protected void saveToTextFile(File selectedFile) {
 // Исключительную ситуацию "ФайлНеНайден" можно не
 // обрабатывать, так как мы файл создаѐм, а не открываем
         }
+
         }
+
+
+
 public static void main(String[] args) {
 // Если не задано ни одного аргумента командной строки -
 // Продолжать вычисления невозможно, коэффиценты неизвестны
