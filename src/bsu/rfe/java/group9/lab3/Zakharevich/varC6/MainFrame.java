@@ -1,7 +1,6 @@
 package bsu.rfe.java.group9.lab3.Zakharevich.varC6;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -46,6 +45,7 @@ public class MainFrame extends JFrame {
     private JMenuItem saveToTextMenuItem;
     private JMenuItem saveToGraphicsMenuItem;
     private JMenuItem searchValueMenuItem;
+    private JMenuItem searchPalindromesMenuItem;
     private JMenuItem informationItem;
     ImageIcon icon = new ImageIcon("Author.jpg");
     // Поля ввода для считывания значений переменных
@@ -164,7 +164,16 @@ public void actionPerformed(ActionEvent event) {
         getContentPane().repaint();
         }
         };
+
+        Action searchPalindromes = new AbstractAction("Найти палиндромы") {
+            public void actionPerformed(ActionEvent event) {
+                renderer.setPalindromes(true);
+                getContentPane().repaint();
+            }
+        };
 // Добавить действие в меню "Таблица"
+        searchPalindromesMenuItem = tableMenu.add(searchPalindromes);
+        searchPalindromesMenuItem.setEnabled(false);
         searchValueMenuItem = tableMenu.add(searchValueAction);
 // По умолчанию пункт меню является недоступным (данных ещѐ нет)
         searchValueMenuItem.setEnabled(false);
@@ -259,6 +268,7 @@ public void actionPerformed(ActionEvent ev) {
         saveToTextMenuItem.setEnabled(true);
         saveToGraphicsMenuItem.setEnabled(true);
         searchValueMenuItem.setEnabled(true);
+        searchPalindromesMenuItem.setEnabled(true);
         } catch (NumberFormatException ex) {
 // В случае ошибки преобразования чисел показать сообщение об ошибке
         JOptionPane.showMessageDialog(MainFrame.this,
@@ -284,6 +294,7 @@ public void actionPerformed(ActionEvent ev) {
         saveToTextMenuItem.setEnabled(false);
         saveToGraphicsMenuItem.setEnabled(false);
         searchValueMenuItem.setEnabled(false);
+    searchPalindromesMenuItem.setEnabled(false);
 // Обновить область содержания главного окна
         getContentPane().validate();
         }

@@ -15,6 +15,7 @@ public class GornerTableCellRenderer implements TableCellRenderer {
 // (иголкой). Применяется аналогия поиска иголки в стоге сена, в роли
 // стога сена - таблица
     private String needle = null;
+    private Boolean Palindromes = false;
     private DecimalFormat formatter = (DecimalFormat)NumberFormat.getInstance();
     public GornerTableCellRenderer() {
 // Показывать только 10 знаков после запятой
@@ -48,14 +49,43 @@ public class GornerTableCellRenderer implements TableCellRenderer {
             Check.setBackground(Color.WHITE);
             Check.doClick();
             return Check;
-        } else {
+        }
+        else if(Palindromes){
+            String word = "";
+            Boolean TruePalindrom = true;
+            for(int i = 0 ; i<formattedDouble.length();i++){
+                if(formattedDouble.charAt(i)=='.'){
+
+                }
+                else{
+                    word+=formattedDouble.charAt(i);
+                }
+
+            }
+            for(int i = 0 ; i<word.length();i++){
+                if(word.charAt(i)!=word.charAt(word.length()-1-i)){
+                    TruePalindrom = false;
+                    break;
+                }
+            }
+            if(TruePalindrom){
+                panel.setBackground(Color.RED);
+            }
+            else{
+                panel.setBackground(Color.WHITE);
+            }
+        }
+        else {
 // Иначе - в обычный белый
-            label.setText(formattedDouble);
             panel.setBackground(Color.WHITE);
         }
+        label.setText(formattedDouble);
         return panel;
     }
     public void setNeedle(String needle) {
         this.needle = needle;
+    }
+    public void setPalindromes(Boolean Palindromes) {
+        this.Palindromes = Palindromes;
     }
 }
