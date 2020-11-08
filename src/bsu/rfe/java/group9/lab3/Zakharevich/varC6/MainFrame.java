@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ImageIcon;
 
 import javax.swing.JTextField;
 @SuppressWarnings("serial")
@@ -44,6 +45,8 @@ public class MainFrame extends JFrame {
     private JMenuItem saveToTextMenuItem;
     private JMenuItem saveToGraphicsMenuItem;
     private JMenuItem searchValueMenuItem;
+    private JMenuItem informationItem;
+    ImageIcon icon = new ImageIcon("Author.jpg");
     // Поля ввода для считывания значений переменных
     private JTextField textFieldFrom;
     private JTextField textFieldTo;
@@ -76,6 +79,30 @@ public class MainFrame extends JFrame {
         JMenu tableMenu = new JMenu("Таблица");
 // Добавить его в главное меню
         menuBar.add(tableMenu);
+
+        JMenu infMenu = new JMenu("Справка");
+        menuBar.add(infMenu);
+
+
+        Action information = new AbstractAction("О программе")
+        {
+            // Задать действие на нажатие "О программе"
+            public void actionPerformed(ActionEvent event)
+            {
+                Box information=Box.createVerticalBox();
+                JLabel author = new JLabel("Автор: Захаревич Даниил");
+                JLabel group = new JLabel("студент 9 группы");
+                JLabel image=new JLabel(new ImageIcon(MainFrame.class.getResource("Author.jpg")));
+                information.add(author);
+                information.add(group);
+                information.add(image);
+                JOptionPane.showMessageDialog(MainFrame.this, information, "О программе", JOptionPane.INFORMATION_MESSAGE);
+
+            }
+        };
+
+        informationItem = infMenu.add(information);
+
 // Создать новое "действие" по сохранению в текстовый файл
 
         Action saveToTextAction = new AbstractAction("Сохранить в текстовый файл") {
