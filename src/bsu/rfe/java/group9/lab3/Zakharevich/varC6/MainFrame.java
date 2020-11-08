@@ -36,6 +36,7 @@ public class MainFrame extends JFrame {
     private static final int HEIGHT = 500;
     // Массив коэффициентов многочлена
     private Double[] coefficients;
+    private Float[] coeff;
     // Объект диалогового окна для выбора файлов
 // Компонент не создаѐтся изначально, т.к. может и не понадобиться
 // пользователю если тот не собирается сохранять данные в файл
@@ -56,11 +57,12 @@ public class MainFrame extends JFrame {
     private GornerTableCellRenderer renderer = new GornerTableCellRenderer();
     // Модель данных с результатами вычислений
     private GornerTableModel data;
-    public MainFrame(Double[] coefficients) {
+    public MainFrame(Double[] coefficients,Float[] coeff) {
 // Обязательный вызов конструктора предка
         super("Табулирование многочлена на отрезке по схеме Горнера");
 // Запомнить во внутреннем поле переданные коэффициенты
         this.coefficients = coefficients;
+        this.coeff = coeff;
 // Установить размеры окна
         setSize(WIDTH, HEIGHT);
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -240,7 +242,7 @@ public void actionPerformed(ActionEvent ev) {
         Double step = Double.parseDouble(textFieldStep.getText());
 // На основе считанных данных создать новый экземпляр модели таблицы
         data = new GornerTableModel(from, to, step,
-        MainFrame.this.coefficients);
+        MainFrame.this.coefficients,MainFrame.this.coeff);
 // Создать новый экземпляр таблицы
         JTable table = new JTable(data);
 // Установить в качестве визуализатора ячеек для класса Double разработанный визуализатор
@@ -361,11 +363,13 @@ public static void main(String[] args) {
         }
 // Зарезервировать места в массиве коэффициентов столько, сколько аргументов командной строки
         Double[] coefficients = new Double[args.length];
+        Float[] coeff = new Float[args.length];
         int i = 0;
         try {
 // Перебрать аргументы, пытаясь преобразовать их в Double
         for (String arg: args) {
-        coefficients[i++] = Double.parseDouble(arg);
+        coefficients[i] = Double.parseDouble(arg);
+        coeff[i++] = Float.parseFloat(arg);
         }
         }
         catch (NumberFormatException ex) {
@@ -375,7 +379,7 @@ public static void main(String[] args) {
         System.exit(-2);
         }
 // Создать экземпляр главного окна, передав ему коэффициенты
-        MainFrame frame = new MainFrame(coefficients);
+        MainFrame frame = new MainFrame(coefficients,coeff);
 // Задать действие, выполняемое при закрытии окна
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

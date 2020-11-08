@@ -19,8 +19,8 @@ public class GornerTableCellRenderer implements TableCellRenderer {
     private String needle = null;
     private DecimalFormat formatter = (DecimalFormat)NumberFormat.getInstance();
     public GornerTableCellRenderer() {
-// Показывать только 5 знаков после запятой
-        formatter.setMaximumFractionDigits(5);
+// Показывать только 10 знаков после запятой
+        formatter.setMaximumFractionDigits(10);
 // Не использовать группировку (т.е. не отделять тысячи
 // ни запятыми, ни пробелами), т.е. показывать число как "1000",
 // а не "1 000" или "1,000"
