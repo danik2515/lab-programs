@@ -247,7 +247,6 @@ public void actionPerformed(ActionEvent ev) {
         JTable table = new JTable(data);
 // Установить в качестве визуализатора ячеек для класса Double разработанный визуализатор
         table.setDefaultRenderer(Double.class, renderer);
-        table.setDefaultRenderer(Float.class, renderer);
 // Установить размер строки таблицы в 30 пикселов
         table.setRowHeight(30);
 // Удалить все вложенные элементы из контейнера hBoxResult

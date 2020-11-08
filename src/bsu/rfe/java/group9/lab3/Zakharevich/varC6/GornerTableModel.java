@@ -78,11 +78,7 @@ public class GornerTableModel extends AbstractTableModel {
     }
     public Class<?> getColumnClass(int col) {
 
-        if(col==2) {
-            return Float.class;
-        }
-        else {
             return Double.class;
-        }
+
     }
 }
