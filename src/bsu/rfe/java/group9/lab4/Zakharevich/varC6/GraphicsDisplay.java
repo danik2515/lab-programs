@@ -40,7 +40,7 @@ public class GraphicsDisplay extends JPanel {
 // Сконструировать необходимые объекты, используемые в рисовании
 // Перо для рисования графика
         graphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f);
+                BasicStroke.JOIN_ROUND, 10.0f, new float[]{4,1,4,1,4,1,1,1,1,1,1,1}, 0.0f);
 // Перо для рисования осей координат
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
@@ -192,12 +192,11 @@ minY
 и угла прямоугольника, в который он вписан */
 // Центр - в точке (x,y)
             Point2D.Double center = xyToPoint(point[0], point[1]);
-// Угол прямоугольника - отстоит на расстоянии (3,3)
-            Point2D.Double corner = shiftPoint(center, 3, 3);
-// Задать эллипс по центру и диагонали
-            marker.setFrameFromCenter(center, corner);
-            canvas.draw(marker); // Начертить контур маркера
-            canvas.fill(marker); // Залить внутреннюю область маркера
+            marker.setFrameFromCenter(center, shiftPoint(center, 5, 5));
+            canvas.draw(marker);
+            canvas.draw(new Line2D.Double(shiftPoint(center, -5, 0), shiftPoint(center, 5, 0)));
+            canvas.draw(new Line2D.Double(shiftPoint(center, 0, -5), shiftPoint(center, 0, 5)));
+
         }
     }
     // Метод, обеспечивающий отображение осей координат
