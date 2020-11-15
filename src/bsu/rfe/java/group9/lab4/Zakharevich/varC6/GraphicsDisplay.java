@@ -179,12 +179,31 @@ minY
     protected void paintMarkers(Graphics2D canvas) {
 // Шаг 1 - Установить специальное перо для черчения контуров маркеров
         canvas.setStroke(markerStroke);
-// Выбрать красный цвета для контуров маркеров
-        canvas.setColor(Color.RED);
-// Выбрать красный цвет для закрашивания маркеров внутри
-        canvas.setPaint(Color.RED);
 // Шаг 2 - Организовать цикл по всем точкам графика
         for (Double[] point: graphicsData) {
+            boolean temp = false;
+            String str = Double.toString(point[1]);
+            int sum =0;
+            for(int i =0;i<str.length();i++) {
+                if(str.charAt(i)=='.'){
+                    break;
+                }
+                if(str.charAt(i)=='-'){
+                    continue;
+                }
+                sum += Character.getNumericValue(str.charAt(i));
+            }
+            if(sum<10){
+                temp = true;
+            }
+            if(!temp) {
+                canvas.setColor(Color.RED);
+            }else{
+                canvas.setColor(Color.BLUE);
+            }
+
+
+
 // Инициализировать эллипс как объект для представления маркера
             Ellipse2D.Double marker = new Ellipse2D.Double();
 /* Эллипс будет задаваться посредством указания координат
