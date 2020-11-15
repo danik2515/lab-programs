@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 public class GraphicsDisplay extends JPanel {
     // Список координат точек для построения графика
     private Double[][] graphicsData;
+    private Double[][] NewgraphicsData;
     // Флаговые переменные, задающие правила отображения графика
     private boolean showAxis = true;
     private boolean showMarkers = true;
@@ -30,6 +31,7 @@ public class GraphicsDisplay extends JPanel {
     private double scale;
     // Различные стили черчения линий
     private BasicStroke graphicsStroke;
+    private BasicStroke newgraphicsStroke;
     private BasicStroke axisStroke;
     private BasicStroke markerStroke;
     // Различные шрифты отображения надписей
@@ -41,6 +43,8 @@ public class GraphicsDisplay extends JPanel {
 // Перо для рисования графика
         graphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_ROUND, 10.0f, new float[]{4,1,4,1,4,1,1,1,1,1,1,1}, 0.0f);
+        newgraphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f);
 // Перо для рисования осей координат
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
@@ -51,6 +55,10 @@ public class GraphicsDisplay extends JPanel {
         axisFont = new Font("Serif", Font.BOLD, 36);
     }
 // Данный метод вызывается из обработчика элемента меню "Открыть файл с графиком"
+public void showNewGraphics(Double[][] graphicsData) {
+    this.NewgraphicsData = graphicsData;
+    repaint();
+}
     // главного окна приложения в случае успешной загрузки данных
     public void showGraphics(Double[][] graphicsData) {
 // Сохранить массив точек во внутреннем поле класса
@@ -76,34 +84,68 @@ public class GraphicsDisplay extends JPanel {
          */
         super.paintComponent(g);
 // Шаг 2 - Если данные графика не загружены (при показе компонентапри запуске программы) - ничего не делать
-        if (graphicsData==null || graphicsData.length==0) return;
+        if(NewgraphicsData==null||NewgraphicsData.length==0) {
+            if (graphicsData == null || graphicsData.length == 0) return;
 // Шаг 3 - Определить минимальное и максимальное значения для координат X и Y
 // Это необходимо для определения области пространства, подлежащей отображению
 // Еѐ верхний левый угол это (minX, maxY) - правый нижний это(maxX, minY)
-        minX = graphicsData[0][0];
-        maxX = graphicsData[graphicsData.length-1][0];
-        minY = graphicsData[0][1];
-        maxY = minY;
+            minX = graphicsData[0][0];
+            maxX = graphicsData[graphicsData.length - 1][0];
+            minY = graphicsData[0][1];
+            maxY = minY;
 // Найти минимальное и максимальное значение функции
-        for (int i = 1; i<graphicsData.length; i++) {
-            if (graphicsData[i][1]<minY) {
-                minY = graphicsData[i][1];
+            for (int i = 1; i < graphicsData.length; i++) {
+                if (graphicsData[i][1] < minY) {
+                    minY = graphicsData[i][1];
+                }
+                if (graphicsData[i][1] > maxY) {
+                    maxY = graphicsData[i][1];
+                }
             }
-            if (graphicsData[i][1]>maxY) {
-                maxY = graphicsData[i][1];
-            }
-        }
 /* Шаг 4 - Определить (исходя из размеров окна) масштабы по осям X
 и Y - сколько пикселов
 * приходится на единицу длины по X и по Y
 */
+
+        }else{
+
+            if(graphicsData[0][0]<NewgraphicsData[0][0]){
+                minX = graphicsData[0][0];
+            }else{
+                minX = NewgraphicsData[0][0];
+            }
+            if(graphicsData[graphicsData.length - 1][0]<NewgraphicsData[NewgraphicsData.length - 1][0]){
+                maxX = NewgraphicsData[graphicsData.length - 1][0];
+            }else{
+                maxX = graphicsData[graphicsData.length - 1][0];
+            }
+            minY = graphicsData[0][1];
+            maxY = minY;
+// Найти минимальное и максимальное значение функции
+            for (int i = 1; i < graphicsData.length; i++) {
+                if (graphicsData[i][1] < minY) {
+                    minY = graphicsData[i][1];
+                }
+                if (graphicsData[i][1] > maxY) {
+                    maxY = graphicsData[i][1];
+                }
+            }
+                for (int i = 1; i < NewgraphicsData.length; i++){
+                    if (NewgraphicsData[i][1] < minY) {
+                    minY = NewgraphicsData[i][1];
+                }
+                if (NewgraphicsData[i][1] > maxY) {
+                    maxY = NewgraphicsData[i][1];
+                }
+            }
+        }
         double scaleX = getSize().getWidth() / (maxX - minX);
         double scaleY = getSize().getHeight() / (maxY - minY);
 // Шаг 5 - Чтобы изображение было неискажѐнным - масштаб должен быть одинаков
 // Выбираем за основу минимальный
         scale = Math.min(scaleX, scaleY);
 // Шаг 6 - корректировка границ отображаемой области согласно выбранному масштабу
-        if (scale==scaleX) {
+        if (scale == scaleX) {
 /* Если за основу был взят масштаб по оси X, значит по оси Y
 делений меньше,
 * т.е. подлежащий визуализации диапазон по Y будет меньше
@@ -115,15 +157,15 @@ public class GraphicsDisplay extends JPanel {
 * 3) Набросим по половине недостающего расстояния на maxY и
 minY
 */
-            double yIncrement = (getSize().getHeight()/scale - (maxY -
-                    minY))/2;
+            double yIncrement = (getSize().getHeight() / scale - (maxY -
+                    minY)) / 2;
             maxY += yIncrement;
             minY -= yIncrement;
         }
-        if (scale==scaleY) {
+        if (scale == scaleY) {
 // Если за основу был взят масштаб по оси Y, действовать по аналогии
-            double xIncrement = (getSize().getWidth()/scale - (maxX -
-                    minX))/2;
+            double xIncrement = (getSize().getWidth() / scale - (maxX -
+                    minX)) / 2;
             maxX += xIncrement;
             minX -= xIncrement;
         }
@@ -139,6 +181,9 @@ minY
         if (showAxis) paintAxis(canvas);
 // Затем отображается сам график
         paintGraphics(canvas);
+        if(!(NewgraphicsData==null||NewgraphicsData.length==0)){
+            paintNewGraphics(canvas);
+        }
 // Затем (если нужно) отображаются маркеры точек, по которым строился график.
         if (showMarkers) paintMarkers(canvas);
 // Шаг 9 - Восстановить старые настройки холста
@@ -164,6 +209,33 @@ minY
 // Преобразовать значения (x,y) в точку на экране point
             Point2D.Double point = xyToPoint(graphicsData[i][0],
                     graphicsData[i][1]);
+            if (i>0) {
+// Не первая итерация цикла - вести линию в точку point
+                graphics.lineTo(point.getX(), point.getY());
+            } else {
+// Первая итерация цикла - установить начало пути в точку point
+                graphics.moveTo(point.getX(), point.getY());
+            }
+        }
+// Отобразить график
+        canvas.draw(graphics);
+    }
+    protected void paintNewGraphics(Graphics2D canvas) {
+// Выбрать линию для рисования графика
+        canvas.setStroke(newgraphicsStroke);
+// Выбрать цвет линии
+        canvas.setColor(Color.BLACK);
+/* Будем рисовать линию графика как путь, состоящий из множества
+сегментов (GeneralPath)
+* Начало пути устанавливается в первую точку графика, после чего
+прямой соединяется со
+* следующими точками
+*/
+        GeneralPath graphics = new GeneralPath();
+        for (int i=0; i<NewgraphicsData.length; i++) {
+// Преобразовать значения (x,y) в точку на экране point
+            Point2D.Double point = xyToPoint(NewgraphicsData[i][0],
+                    NewgraphicsData[i][1]);
             if (i>0) {
 // Не первая итерация цикла - вести линию в точку point
                 graphics.lineTo(point.getX(), point.getY());

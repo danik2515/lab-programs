@@ -8,16 +8,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
+import javax.swing.JMenuItem;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     // Начальные размеры окна приложения
@@ -26,12 +20,14 @@ public class MainFrame extends JFrame {
     // Объект диалогового окна для выбора файлов
     private JFileChooser fileChooser = null;
     // Пункты меню
+    private JMenuItem buttonopenNewGraphicsAction;
     private JCheckBoxMenuItem showAxisMenuItem;
     private JCheckBoxMenuItem showMarkersMenuItem;
     // Компонент-отображатель графика
     private GraphicsDisplay display = new GraphicsDisplay();
     // Флаг, указывающий на загруженность данных графика
     private boolean fileLoaded = false;
+    private boolean NewGraph = false;
     public MainFrame() {
 // Вызов конструктора предка Frame
         super("Построение графиков функций на основе заранее подготовленных файлов");
@@ -52,6 +48,7 @@ public class MainFrame extends JFrame {
 // Создать действие по открытию файла
         Action openGraphicsAction = new AbstractAction("Открыть файл с графиком") {
         public void actionPerformed(ActionEvent event) {
+            NewGraph = false;
             if (fileChooser==null) {
                 fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new File("."));
@@ -74,9 +71,24 @@ public class MainFrame extends JFrame {
         display.setShowAxis(showAxisMenuItem.isSelected());
     }
 };
+        Action openNewGraphicsAction = new AbstractAction("Добавить еще один график") {
+            public void actionPerformed(ActionEvent event) {
+                NewGraph = true;
+                if (fileChooser==null) {
+                    fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if (fileChooser.showOpenDialog(MainFrame.this) ==
+                        JFileChooser.APPROVE_OPTION)
+                    openGraphics(fileChooser.getSelectedFile());
+            }
+        };
+
+buttonopenNewGraphicsAction = new JMenuItem(openNewGraphicsAction);
 showAxisMenuItem = new JCheckBoxMenuItem(showAxisAction);
 // Добавить соответствующий элемент в меню
         graphicsMenu.add(showAxisMenuItem);
+        graphicsMenu.add(buttonopenNewGraphicsAction);
 // Элемент по умолчанию включен (отмечен флажком)
         showAxisMenuItem.setSelected(true);
 // Повторить действия для элемента "Показывать маркеры точек"
@@ -126,7 +138,11 @@ Double.SIZE/8 байт;
 // Да - установить флаг загруженности данных
         fileLoaded = true;
 // Вызывать метод отображения графика
-        display.showGraphics(graphicsData);
+            if(NewGraph){
+                display.showNewGraphics(graphicsData);
+            }else{
+                display.showGraphics(graphicsData);
+            }
         }
 // Шаг 5 - Закрыть входной поток
         in.close();
@@ -154,6 +170,7 @@ private class GraphicsMenuListener implements MenuListener {
 // Доступность или недоступность элементов меню "График"определяется загруженностью данных
         showAxisMenuItem.setEnabled(fileLoaded);
         showMarkersMenuItem.setEnabled(fileLoaded);
+        buttonopenNewGraphicsAction.setEnabled(fileLoaded);
     }
     // Обработчик, вызываемый после того, как меню исчезло с экрана
     public void menuDeselected(MenuEvent e) {
