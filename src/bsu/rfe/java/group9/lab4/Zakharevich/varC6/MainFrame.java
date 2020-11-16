@@ -23,6 +23,7 @@ public class MainFrame extends JFrame {
     private JMenuItem buttonopenNewGraphicsAction;
     private JCheckBoxMenuItem showAxisMenuItem;
     private JCheckBoxMenuItem showMarkersMenuItem;
+    private JMenuItem RotateItem;
     // Компонент-отображатель графика
     private GraphicsDisplay display = new GraphicsDisplay();
     // Флаг, указывающий на загруженность данных графика
@@ -83,7 +84,20 @@ public class MainFrame extends JFrame {
                     openGraphics(fileChooser.getSelectedFile());
             }
         };
+        Action rotate = new AbstractAction("Поворот графика на 90 градусов") {
+            public void actionPerformed(ActionEvent e) {
+                if(display.isRotate())
+                {
 
+                    display.setRotate(false);
+                }
+                else
+                    display.setRotate(true);
+            }
+        };
+        RotateItem = new JCheckBoxMenuItem(rotate);
+        graphicsMenu.add(RotateItem);
+        RotateItem.setEnabled(false);
 buttonopenNewGraphicsAction = new JMenuItem(openNewGraphicsAction);
 showAxisMenuItem = new JCheckBoxMenuItem(showAxisAction);
 // Добавить соответствующий элемент в меню
@@ -171,6 +185,7 @@ private class GraphicsMenuListener implements MenuListener {
         showAxisMenuItem.setEnabled(fileLoaded);
         showMarkersMenuItem.setEnabled(fileLoaded);
         buttonopenNewGraphicsAction.setEnabled(fileLoaded);
+        RotateItem.setEnabled(fileLoaded);
     }
     // Обработчик, вызываемый после того, как меню исчезло с экрана
     public void menuDeselected(MenuEvent e) {

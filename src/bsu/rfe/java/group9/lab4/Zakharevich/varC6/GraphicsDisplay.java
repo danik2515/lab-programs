@@ -14,6 +14,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
+import java.awt.geom.*;
+
 @SuppressWarnings("serial")
 public class GraphicsDisplay extends JPanel {
     // Список координат точек для построения графика
@@ -29,6 +31,9 @@ public class GraphicsDisplay extends JPanel {
     private double maxY;
     // Используемый масштаб отображения
     private double scale;
+
+
+    private boolean Rotate = false;
     // Различные стили черчения линий
     private BasicStroke graphicsStroke;
     private BasicStroke newgraphicsStroke;
@@ -175,6 +180,13 @@ minY
         Color oldColor = canvas.getColor();
         Paint oldPaint = canvas.getPaint();
         Font oldFont = canvas.getFont();
+
+        if (Rotate) {
+            AffineTransform at = AffineTransform.getRotateInstance(-Math.PI/2, getSize().getWidth()/2, getSize().getHeight()/2);
+            at.concatenate(new AffineTransform(getSize().getHeight()/getSize().getWidth(), 0.0, 0.0, getSize().getWidth()/getSize().getHeight(),
+                    (getSize().getWidth()-getSize().getHeight())/2, -(getSize().getWidth()-getSize().getHeight())/2));
+            canvas.setTransform(at);
+        }
 // Шаг 8 - В нужном порядке вызвать методы отображения элементов графика
 // Порядок вызова методов имеет значение, т.к. предыдущий рисунок будет затираться последующим
 // Первыми (если нужно) отрисовываются оси координат.
@@ -191,6 +203,7 @@ minY
         canvas.setPaint(oldPaint);
         canvas.setColor(oldColor);
         canvas.setStroke(oldStroke);
+
     }
     // Отрисовка графика по прочитанным координатам
     protected void paintGraphics(Graphics2D canvas) {
@@ -387,5 +400,13 @@ minY
 // Задать еѐ координаты как координаты существующей точки +заданные смещения
         dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
         return dest;
+    }
+
+    public void setRotate(boolean rotate) {
+        this.Rotate = rotate;
+        repaint();
+    }
+    public boolean isRotate() {
+        return Rotate;
     }
 }
