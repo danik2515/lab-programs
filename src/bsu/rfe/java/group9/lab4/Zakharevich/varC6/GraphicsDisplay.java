@@ -120,7 +120,7 @@ public void showNewGraphics(Double[][] graphicsData) {
                 minX = NewgraphicsData[0][0];
             }
             if(graphicsData[graphicsData.length - 1][0]<NewgraphicsData[NewgraphicsData.length - 1][0]){
-                maxX = NewgraphicsData[graphicsData.length - 1][0];
+                maxX = NewgraphicsData[NewgraphicsData.length - 1][0];
             }else{
                 maxX = graphicsData[graphicsData.length - 1][0];
             }
