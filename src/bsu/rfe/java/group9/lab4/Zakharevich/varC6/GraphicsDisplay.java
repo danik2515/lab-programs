@@ -15,9 +15,15 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import java.awt.geom.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 
 @SuppressWarnings("serial")
-public class GraphicsDisplay extends JPanel {
+public class GraphicsDisplay extends JPanel implements MouseMotionListener, MouseListener{
     // Список координат точек для построения графика
     private Double[][] graphicsData;
     private Double[][] NewgraphicsData;
@@ -31,8 +37,8 @@ public class GraphicsDisplay extends JPanel {
     private double maxY;
     // Используемый масштаб отображения
     private double scale;
-
-
+    private int mouseX ;
+    private int mouseY;
     private boolean Rotate = false;
     // Различные стили черчения линий
     private BasicStroke graphicsStroke;
@@ -41,6 +47,8 @@ public class GraphicsDisplay extends JPanel {
     private BasicStroke markerStroke;
     // Различные шрифты отображения надписей
     private Font axisFont;
+    private Font cursorFont;
+
     public GraphicsDisplay() {
 // Цвет заднего фона области отображения - белый
         setBackground(Color.WHITE);
@@ -53,12 +61,19 @@ public class GraphicsDisplay extends JPanel {
 // Перо для рисования осей координат
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
+
+
 // Перо для рисования контуров маркеров
         markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
 // Шрифт для подписей осей координат
         axisFont = new Font("Serif", Font.BOLD, 36);
+        cursorFont = new Font("Serif",Font.PLAIN,14);
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
+
     }
+
 // Данный метод вызывается из обработчика элемента меню "Открыть файл с графиком"
 public void showNewGraphics(Double[][] graphicsData) {
     this.NewgraphicsData = graphicsData;
@@ -174,6 +189,7 @@ minY
             maxX += xIncrement;
             minX -= xIncrement;
         }
+
 // Шаг 7 - Сохранить текущие настройки холста
         Graphics2D canvas = (Graphics2D) g;
         Stroke oldStroke = canvas.getStroke();
@@ -199,6 +215,7 @@ minY
 // Затем (если нужно) отображаются маркеры точек, по которым строился график.
         if (showMarkers) paintMarkers(canvas);
 // Шаг 9 - Восстановить старые настройки холста
+        MyMouse(canvas);
         canvas.setFont(oldFont);
         canvas.setPaint(oldPaint);
         canvas.setColor(oldColor);
@@ -230,9 +247,11 @@ minY
                 graphics.moveTo(point.getX(), point.getY());
             }
         }
+
 // Отобразить график
         canvas.draw(graphics);
     }
+
     protected void paintNewGraphics(Graphics2D canvas) {
 // Выбрать линию для рисования графика
         canvas.setStroke(newgraphicsStroke);
@@ -314,7 +333,7 @@ minY
 // Подписи к координатным осям делаются специальным шрифтом
         canvas.setFont(axisFont);
 // Создать объект контекста отображения текста - для получения характеристик устройства (экрана)
-                FontRenderContext context = canvas.getFontRenderContext();
+        FontRenderContext context = canvas.getFontRenderContext();
 // Определить, должна ли быть видна ось Y на графике
         if (minX<=0.0 && maxX>=0.0) {
 // Она должна быть видна, если левая граница показываемой области (minX) <= 0.0,
@@ -341,6 +360,10 @@ minY
 // Определить, сколько места понадобится для надписи "y"
             Rectangle2D bounds = axisFont.getStringBounds("y", context);
             Point2D.Double labelPos = xyToPoint(0, maxY);
+            Rectangle2D bound = axisFont.getStringBounds("0", context);
+            Point2D.Double label0 = xyToPoint(0, 0);
+            canvas.drawString("0", (float)label0.getX() + 10,
+                    (float)(label0.getY() - bound.getY()));
 // Вывести надпись в точке с вычисленными координатами
             canvas.drawString("y", (float)labelPos.getX() + 10,
                     (float)(labelPos.getY() - bounds.getY()));
@@ -409,4 +432,46 @@ minY
     public boolean isRotate() {
         return Rotate;
     }
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    public void mouseDragged(MouseEvent e) {
+
+    }
+    public void mouseMoved(MouseEvent e) {
+        mouseX=e.getX();
+        mouseY=e.getY();
+        repaint();
+    }
+    public void MyMouse(Graphics2D canvas) {
+        canvas.setPaint(Color.BLACK);
+        canvas.setFont(cursorFont);
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
+        formatter.setMaximumFractionDigits(3);
+        for (Double[] point: graphicsData) {
+            Point2D p = xyToPoint(point[0], point[1]);
+            if ((mouseY<=(int)p.getY()+5)&&(mouseY>=(int)p.getY()-5)&&((mouseX<=(int)p.getX()+5)&&(mouseX>=(int)p.getX()-5))) {
+                canvas.drawString("X=" + formatter.format(point[0]) + "; Y=" + formatter.format(point[1]), (float) mouseX, (float) mouseY);
+
+            }
+        }
+    }
+
 }
