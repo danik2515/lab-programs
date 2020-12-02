@@ -38,10 +38,12 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
     private double maxY;
     // Используемый масштаб отображения
     private double scale;
+    private double mouseYnew;
     private int mouseX ;
     private int mouseY;
     private int mouseX0;
     private int mouseY0;
+    private int numfun;
     private boolean Rotate = false;
     // Различные стили черчения линий
     private BasicStroke graphicsStroke;
@@ -53,7 +55,9 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
     private Font cursorFont;
     private BasicStroke fieldStroke;
     private boolean flagpoint;
+    private boolean flagpointfun;
     private boolean flagpressed = false;
+    private boolean flagpressedfun=false;
     private Vector<Double> minXzoom;
     private Vector<Double> maxXzoom;
     private Vector<Double> minYzoom;
@@ -460,19 +464,26 @@ minY
             maxXzoom.remove(maxXzoom.size()-1);
             minYzoom.remove(minYzoom.size()-1);
             maxYzoom.remove(maxYzoom.size()-1);
+            repaint();
         }
     }
 
     public void mousePressed(MouseEvent e) {
-        if(e.getButton()==1){
-        mouseX0=e.getX();
-        mouseY0=e.getY();
+
+        if(!flagpoint && e.getButton()==1){
         flagpressed=true;
+        flagpressedfun=false;
+            mouseX0=e.getX();
+            mouseY0=e.getY();
+        }
+        if(flagpoint && e.getButton()==1){
+        flagpressedfun=true;
+        flagpressed=false;
         }
     }
 
     public void mouseReleased(MouseEvent e) {
-        if(!flagpoint && e.getButton()==1){
+        if(!flagpressedfun&&!flagpoint && e.getButton()==1){
         flagpressed=false;
         if(minXzoom.size()<2) {
             minXzoom.add(mouseX0 / scale + minXzoom.elementAt(0));
@@ -487,6 +498,9 @@ minY
             maxYzoom.add(maxYzoom.elementAt(maxYzoom.size()-1) - mouseY0 / scale);
         }
         }
+        if( e.getButton()==1){
+            flagpressedfun=false;
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -498,11 +512,19 @@ minY
     }
 
     public void mouseDragged(MouseEvent e) {
+        if(flagpoint){
+            mouseX0=e.getX();
+            mouseY0=e.getY();
+        }
         mouseX=e.getX();
         mouseY=e.getY();
         repaint();
     }
     public void mouseMoved(MouseEvent e) {
+        if(!flagpoint){
+            mouseX0=e.getX();
+            mouseY0=e.getY();
+        }
         mouseX=e.getX();
         mouseY=e.getY();
         repaint();
@@ -514,19 +536,24 @@ minY
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
         formatter.setMaximumFractionDigits(3);
         flagpoint=false;
+        int i=0;
         for (Double[] point: graphicsData) {
             Point2D p = xyToPoint(point[0], point[1]);
-            if ((mouseY<=(int)p.getY()+5)&&(mouseY>=(int)p.getY()-5)&&((mouseX<=(int)p.getX()+5)&&(mouseX>=(int)p.getX()-5))) {
-                canvas.drawString("X=" + formatter.format(point[0]) + "; Y=" + formatter.format(point[1]), (float) mouseX, (float) mouseY);
-            }
             if ((mouseY0<=(int)p.getY()+5)&&(mouseY0>=(int)p.getY()-5)&&((mouseX0<=(int)p.getX()+5)&&(mouseX0>=(int)p.getX()-5))) {
                flagpoint=true;
             }
+            if ((mouseY<=(int)p.getY()+5)&&(mouseY>=(int)p.getY()-5)&&((mouseX<=(int)p.getX()+5)&&(mouseX>=(int)p.getX()-5))) {
+                canvas.drawString("X=" + formatter.format(point[0]) + "; Y=" + formatter.format(point[1]), (float) mouseX, (float) mouseY);
+                break;
+            }
+           i++;
         }
+        if(!flagpressedfun) numfun=i;
         canvas.setColor(Color.GRAY);
         canvas.setStroke(fieldStroke);
-        if(!flagpoint && flagpressed)
+        if(!flagpoint && flagpressed && !flagpressedfun)
             canvas.drawRect(mouseX0,mouseY0,mouseX-mouseX0,mouseY-mouseY0);
+        if( flagpressedfun && numfun<graphicsData.length) graphicsData[numfun][1]=(maxYzoom.elementAt(maxYzoom.size()-1)-mouseY/scale);
     }
 
 }
