@@ -1,4 +1,4 @@
-package bsu.rfe.java.group9.lab4.Zakharevich.varC6;
+package bsu.rfe.java.group9.lab5.Zakharevich.varC6;
 
 import java.awt.BorderLayout;
 import java.awt.Toolkit;

@@ -1,4 +1,4 @@
-package bsu.rfe.java.group9.lab4.Zakharevich.varC6;
+package bsu.rfe.java.group9.lab5.Zakharevich.varC6;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -21,6 +21,7 @@ import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Vector;
 
 @SuppressWarnings("serial")
 public class GraphicsDisplay extends JPanel implements MouseMotionListener, MouseListener{
@@ -39,6 +40,8 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
     private double scale;
     private int mouseX ;
     private int mouseY;
+    private int mouseX0;
+    private int mouseY0;
     private boolean Rotate = false;
     // Различные стили черчения линий
     private BasicStroke graphicsStroke;
@@ -48,7 +51,13 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
     // Различные шрифты отображения надписей
     private Font axisFont;
     private Font cursorFont;
-
+    private BasicStroke fieldStroke;
+    private boolean flagpoint;
+    private boolean flagpressed = false;
+    private Vector<Double> minXzoom;
+    private Vector<Double> maxXzoom;
+    private Vector<Double> minYzoom;
+    private Vector<Double> maxYzoom;
     public GraphicsDisplay() {
 // Цвет заднего фона области отображения - белый
         setBackground(Color.WHITE);
@@ -61,7 +70,8 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
 // Перо для рисования осей координат
         axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
-
+        fieldStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_ROUND, 10.0f, new float[]{4,2}, 0.0f);
 
 // Перо для рисования контуров маркеров
         markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
@@ -71,7 +81,10 @@ public class GraphicsDisplay extends JPanel implements MouseMotionListener, Mous
         cursorFont = new Font("Serif",Font.PLAIN,14);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-
+        minXzoom = new Vector(1);
+        minYzoom = new Vector(1);
+        maxXzoom = new Vector(1);
+        maxYzoom = new Vector(1);
     }
 
 // Данный метод вызывается из обработчика элемента меню "Открыть файл с графиком"
@@ -159,13 +172,20 @@ public void showNewGraphics(Double[][] graphicsData) {
                 }
             }
         }
-        double scaleX = getSize().getWidth() / (maxX - minX);
-        double scaleY = getSize().getHeight() / (maxY - minY);
+        if(minXzoom.size()<1) {
+            minXzoom.add(0, minX);
+            maxXzoom.add(0, maxX);
+            minYzoom.add(0, minY);
+            maxYzoom.add(0, maxY);
+        }
+
+            double scaleX = getSize().getWidth() / (maxXzoom.elementAt(maxXzoom.size() - 1) - minXzoom.elementAt(minXzoom.size() - 1));
+            double scaleY = getSize().getHeight() / (maxYzoom.elementAt(maxYzoom.size() - 1) - minYzoom.elementAt(minYzoom.size() - 1));
 // Шаг 5 - Чтобы изображение было неискажѐнным - масштаб должен быть одинаков
 // Выбираем за основу минимальный
-        scale = Math.min(scaleX, scaleY);
+            scale = Math.min(scaleX, scaleY);
 // Шаг 6 - корректировка границ отображаемой области согласно выбранному масштабу
-        if (scale == scaleX) {
+            if (scale == scaleX) {
 /* Если за основу был взят масштаб по оси X, значит по оси Y
 делений меньше,
 * т.е. подлежащий визуализации диапазон по Y будет меньше
@@ -177,19 +197,20 @@ public void showNewGraphics(Double[][] graphicsData) {
 * 3) Набросим по половине недостающего расстояния на maxY и
 minY
 */
-            double yIncrement = (getSize().getHeight() / scale - (maxY -
-                    minY)) / 2;
-            maxY += yIncrement;
-            minY -= yIncrement;
-        }
-        if (scale == scaleY) {
+                Double yIncrement = (getSize().getHeight() / scale - (maxYzoom.elementAt(maxYzoom.size() - 1) - minYzoom.elementAt(minYzoom.size() - 1))) / 2;
+                maxYzoom.set(maxYzoom.size() - 1,yIncrement+maxYzoom.elementAt(maxYzoom.size() - 1));
+                minYzoom.set(minYzoom.size() - 1,-yIncrement+minYzoom.elementAt(minYzoom.size() - 1));;
+            }
+            if (scale == scaleY) {
 // Если за основу был взят масштаб по оси Y, действовать по аналогии
-            double xIncrement = (getSize().getWidth() / scale - (maxX -
-                    minX)) / 2;
-            maxX += xIncrement;
-            minX -= xIncrement;
-        }
-
+                Double xIncrement = (getSize().getWidth() / scale - (maxXzoom.elementAt(maxXzoom.size() - 1) - minXzoom.elementAt(minXzoom.size() - 1))) / 2;
+                maxXzoom.set(maxXzoom.size() - 1,xIncrement+maxXzoom.elementAt(maxXzoom.size() - 1));
+                minXzoom.set(minXzoom.size() - 1,-xIncrement+minXzoom.elementAt(minXzoom.size() - 1));;
+            }
+        maxX=maxXzoom.elementAt(maxXzoom.size() - 1);
+        minX=minXzoom.elementAt(minXzoom.size() - 1);
+        maxY=maxYzoom.elementAt(maxYzoom.size() - 1);
+        minY=minYzoom.elementAt(minYzoom.size() - 1);
 // Шаг 7 - Сохранить текущие настройки холста
         Graphics2D canvas = (Graphics2D) g;
         Stroke oldStroke = canvas.getStroke();
@@ -212,6 +233,7 @@ minY
         if(!(NewgraphicsData==null||NewgraphicsData.length==0)){
             paintNewGraphics(canvas);
         }
+
 // Затем (если нужно) отображаются маркеры точек, по которым строился график.
         if (showMarkers) paintMarkers(canvas);
 // Шаг 9 - Восстановить старые настройки холста
@@ -433,15 +455,38 @@ minY
         return Rotate;
     }
     public void mouseClicked(MouseEvent e) {
-
+        if(e.getButton()==3 && minXzoom.size()>1) {
+            minXzoom.remove(minXzoom.size()-1);
+            maxXzoom.remove(maxXzoom.size()-1);
+            minYzoom.remove(minYzoom.size()-1);
+            maxYzoom.remove(maxYzoom.size()-1);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
-
+        if(e.getButton()==1){
+        mouseX0=e.getX();
+        mouseY0=e.getY();
+        flagpressed=true;
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
-
+        if(!flagpoint && e.getButton()==1){
+        flagpressed=false;
+        if(minXzoom.size()<2) {
+            minXzoom.add(mouseX0 / scale + minXzoom.elementAt(0));
+            maxXzoom.add(mouseX / scale + minXzoom.elementAt(0));
+            minYzoom.add(maxYzoom.elementAt(0) - mouseY / scale);
+            maxYzoom.add(maxYzoom.elementAt(0) - mouseY0 / scale);
+            }
+        else {
+            minXzoom.add(mouseX0 / scale + minXzoom.elementAt(minXzoom.size()-1));
+            maxXzoom.add(mouseX / scale + minXzoom.elementAt(minXzoom.size()-1));
+            minYzoom.add(maxYzoom.elementAt(maxYzoom.size()-1) - mouseY / scale);
+            maxYzoom.add(maxYzoom.elementAt(maxYzoom.size()-1) - mouseY0 / scale);
+        }
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
@@ -453,7 +498,9 @@ minY
     }
 
     public void mouseDragged(MouseEvent e) {
-
+        mouseX=e.getX();
+        mouseY=e.getY();
+        repaint();
     }
     public void mouseMoved(MouseEvent e) {
         mouseX=e.getX();
@@ -461,17 +508,25 @@ minY
         repaint();
     }
     public void MyMouse(Graphics2D canvas) {
+
         canvas.setPaint(Color.BLACK);
         canvas.setFont(cursorFont);
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance();
         formatter.setMaximumFractionDigits(3);
+        flagpoint=false;
         for (Double[] point: graphicsData) {
             Point2D p = xyToPoint(point[0], point[1]);
             if ((mouseY<=(int)p.getY()+5)&&(mouseY>=(int)p.getY()-5)&&((mouseX<=(int)p.getX()+5)&&(mouseX>=(int)p.getX()-5))) {
                 canvas.drawString("X=" + formatter.format(point[0]) + "; Y=" + formatter.format(point[1]), (float) mouseX, (float) mouseY);
-
+            }
+            if ((mouseY0<=(int)p.getY()+5)&&(mouseY0>=(int)p.getY()-5)&&((mouseX0<=(int)p.getX()+5)&&(mouseX0>=(int)p.getX()-5))) {
+               flagpoint=true;
             }
         }
+        canvas.setColor(Color.GRAY);
+        canvas.setStroke(fieldStroke);
+        if(!flagpoint && flagpressed)
+            canvas.drawRect(mouseX0,mouseY0,mouseX-mouseX0,mouseY-mouseY0);
     }
 
 }
