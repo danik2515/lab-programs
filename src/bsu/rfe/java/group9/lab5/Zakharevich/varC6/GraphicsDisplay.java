@@ -96,6 +96,17 @@ public void showNewGraphics(Double[][] graphicsData) {
     this.NewgraphicsData = graphicsData;
     repaint();
 }
+    public int getLength () {
+        return this.graphicsData.length;
+    }
+    public  double getX(int i)
+    {
+        return this.graphicsData[i][0];
+    }
+    public  double getY(int i)
+    {
+        return this.graphicsData[i][1];
+    }
     // главного окна приложения в случае успешной загрузки данных
     public void showGraphics(Double[][] graphicsData) {
 // Сохранить массив точек во внутреннем поле класса

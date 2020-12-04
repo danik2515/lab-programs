@@ -3,11 +3,7 @@ package bsu.rfe.java.group9.lab5.Zakharevich.varC6;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -24,6 +20,7 @@ public class MainFrame extends JFrame {
     private JCheckBoxMenuItem showAxisMenuItem;
     private JCheckBoxMenuItem showMarkersMenuItem;
     private JMenuItem RotateItem;
+    private JMenuItem saveToGraphicsMenuItem;
     // Компонент-отображатель графика
     private GraphicsDisplay display = new GraphicsDisplay();
     // Флаг, указывающий на загруженность данных графика
@@ -59,8 +56,27 @@ public class MainFrame extends JFrame {
                 openGraphics(fileChooser.getSelectedFile());
         }
     };
+        Action saveToGraphicsAction = new AbstractAction("Сохранить новые данные для построения графика") {
+            public void actionPerformed(ActionEvent event) {
+                if (fileChooser==null) {
+// Если экземпляр диалогового окна
+// "Открыть файл" ещѐ не создан,
+// то создать его
+                    fileChooser = new JFileChooser();
+// и инициализировать текущей директорией
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+// Показать диалоговое окно
+                if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION);
+// Если результат его показа успешный,
+// сохранить данные в двоичный файл
+                saveToGraphicsFile(fileChooser.getSelectedFile());
+            }
+        };
+// Добавить соответствующий пункт подменю в меню "Файл"
 // Добавить соответствующий элемент меню
     fileMenu.add(openGraphicsAction);
+    saveToGraphicsMenuItem = fileMenu.add(saveToGraphicsAction);
     // Создать пункт меню "График"
     JMenu graphicsMenu = new JMenu("График");
     menuBar.add(graphicsMenu);
@@ -171,6 +187,22 @@ Double.SIZE/8 байт;
         return;
         }
         }
+    protected void saveToGraphicsFile(File selectedFile) {
+        try {
+// Создать новый байтовый поток вывода, направленный в указанный файл
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(selectedFile));
+// Записать в поток вывода попарно значение X в точке, значение многочлена в точке
+            for (int i = 0; i<this.display.getLength(); i++) {
+                out.writeDouble(this.display.getX(i));
+                out.writeDouble(this.display.getY(i));
+            }
+// Закрыть поток вывода
+            out.close();
+        } catch (Exception e) {
+// Исключительную ситуацию "ФайлНеНайден" в данном случае можно не обрабатывать,
+// так как мы файл создаѐм, а не открываем для чтения
+        }
+    }
 public static void main(String[] args) {
 // Создать и показать экземпляр главного окна приложения
         MainFrame frame = new MainFrame();
