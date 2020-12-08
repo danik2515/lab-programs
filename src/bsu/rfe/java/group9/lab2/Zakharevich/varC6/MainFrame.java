@@ -78,9 +78,9 @@ public class MainFrame extends JFrame {
 
     //Формула №2 для рассчѐта
     public Double calculate2(Double x, Double y, Double z) {
-        if (x == 0)	{
+        if (x <= 0)	{
             JOptionPane.showMessageDialog(MainFrame.this,
-                    "x не может равняться нулю", "" +
+                    "x не может быть нулем или меньше", "" +
                             "Ошибка ввода", JOptionPane.WARNING_MESSAGE);
             return 0.0;
         }
