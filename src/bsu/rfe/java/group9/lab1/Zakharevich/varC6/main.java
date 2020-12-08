@@ -14,9 +14,6 @@ public class main
         boolean var1, var2;         // случаи для спец параметров, начинающихся с дефиса
         var1 = var2 = false;
 
-
-
-
         for (String arg : args)         // проходим по передаваемым параметрам
         {
             String[] parts = arg.split(("/")); //раздлеяем параметры ком строки
@@ -73,7 +70,7 @@ public class main
             System.out.println("Завтрак (отсортированный вариант):");
         }
         else
-        System.out.println("Завтрак: ");  //выводим завтрак таким,каким он был первоначально
+        System.out.println("Завтрак: ");
 
         for (Food item : breakfast) {
             if (item != null)
