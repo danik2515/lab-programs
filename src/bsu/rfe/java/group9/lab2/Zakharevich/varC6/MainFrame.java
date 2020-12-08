@@ -84,9 +84,9 @@ public class MainFrame extends JFrame {
                             "Ошибка ввода", JOptionPane.WARNING_MESSAGE);
             return 0.0;
         }
-        if (z <= -1)	{
+        if (z == -1)	{
             JOptionPane.showMessageDialog(MainFrame.this,
-                    "z не может равняться -1 и меньше", "" +
+                    "z не может равняться -1 ", "" +
                             "Ошибка ввода", JOptionPane.WARNING_MESSAGE);
             return 0.0;
         }
