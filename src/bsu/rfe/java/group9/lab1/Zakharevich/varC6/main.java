@@ -57,28 +57,6 @@ public class main
                 System.out.println("Метод класса " + parts[0] + " не был найден.");
             }
         }
-
-        System.out.println("Завтрак: "); //выводим завтрак таким,каким он был первоначально
-        for (Food item : breakfast) {
-            if (item != null)
-            {
-                if (item.calculateCalories()==0.0)  // если ввели продукт, который не предусмотрен в программе
-                {
-                    System.out.print("Такой продукт не предусмотрен (" + item.name);
-                    if(item.par1!=null)
-                        System.out.print(", " + item.par1);
-                    if(item.par2!=null)
-                        System.out.print(", " + item.par2);
-                    System.out.println(")");
-                    continue;
-                }
-                item.consume();
-                System.out.println(" " + item.calculateCalories());
-            } else {
-                break;
-            }
-        }
-
         if (var1)
         {                //случай "ClassNotFoundException", когда мы задаем параметр -sort
             Arrays.sort(breakfast, new Comparator() {
@@ -93,19 +71,32 @@ public class main
             });
 
             System.out.println("Завтрак (отсортированный вариант):");
-            for (Food item : breakfast)
+        }
+        else
+        System.out.println("Завтрак: ");  //выводим завтрак таким,каким он был первоначально
+
+        for (Food item : breakfast) {
+            if (item != null)
             {
-                if (item != null)
+                if (item.calculateCalories()==0.0)  // если ввели продукт, который не предусмотрен в программе
                 {
-                    if (item.calculateCalories()==0.0)
-                        continue;
-                    item.consume();
-                    System.out.println(" " + item.calculateCalories());
+                    System.out.print("Такой продукт не предусмотрен (" + item.name);
+                    if(item.par1!=null)
+                        System.out.print(", " + item.par1);
+                    if(item.par2!=null)
+                        System.out.print(", " + item.par2);
+                    System.out.println(")");
+                    continue;
                 }
-                else
-                    break;
+
+                item.consume();
+                System.out.println(" " + item.calculateCalories());
+            } else {
+                break;
             }
         }
+
+
         if (var2)
         {                            //случай "ClassNotFoundException", когда мы задаем парметр -calories
             double CaloriesCounter = 0.0;
@@ -122,8 +113,8 @@ public class main
 
 
 
-        int eatten_a1, eatten_a2, eatten_a3, eatten_c, eatten_s1, eatten_s2, eatten_s3;
-        eatten_a1 = eatten_a2 = eatten_a3 = eatten_c = eatten_s1 = eatten_s2 = eatten_s3 = 0;
+        int eatten_Apple_small, eatten_Apple_medium, eatten_Apple_big, eatten_Cheese, eatten_Dessert1, eatten_Dessert2, eatten_Dessert3;
+        eatten_Apple_small = eatten_Apple_medium = eatten_Apple_big = eatten_Cheese = eatten_Dessert1 = eatten_Dessert2 = eatten_Dessert3 = 0;
         for(Food item: breakfast)                            // считаем, сколько чего было съедено на завтрак
         {
             if(item == null)
@@ -131,35 +122,35 @@ public class main
             if(item.name.equals("Яблоко"))
             {
                 if(item.par1.equals("маленькое"))
-                    eatten_a1++;
+                    eatten_Apple_small++;
                 else if(item.par1.equals("среднее"))
-                    eatten_a2++;
+                    eatten_Apple_medium++;
                 else if(item.par1.equals("большое"))
-                    eatten_a3++;
+                    eatten_Apple_big++;
             }
             if(item.name.equals("Сыр"))
-                eatten_c++;
+                eatten_Cheese++;
             if(item.name.equals("Десерт"))
             {
                 if(item.par1.equals("шоколад") || item.par2.equals("шоколад"))
                 {
                     if(item.par1.equals("мороженое") || item.par2.equals("мороженое"))
-                        eatten_s1++;
+                        eatten_Dessert1++;
                     if(item.par1.equals("клубника") || item.par2.equals("клубника"))
-                        eatten_s2++;
+                        eatten_Dessert2++;
                 }
                 if(item.par1.equals("мороженое") || item.par2.equals("мороженое"))
                 {
                     if(item.par1.equals("клубника") || item.par2.equals("клубника"))
-                        eatten_s3++;
+                        eatten_Dessert3++;
                 }
             }
         }
         System.out.println("На завтрак съедено:");
-        System.out.println(" маленьких яблок - " + eatten_a1 + ", средних яблок - " + eatten_a2 + ", больших яблок - " + eatten_a3);
-        System.out.println(" кусочков сыра - " + eatten_c);
-        System.out.println(" Десертов с мороженым и шоколадом - " + eatten_s1);
-        System.out.println(" Десертов с клубникой и шоколадом - " + eatten_s2);
-        System.out.println(" Десертов с мороженым и клубникой - " + eatten_s3);
+        System.out.println(" маленьких яблок - " + eatten_Apple_small + ", средних яблок - " + eatten_Apple_medium + ", больших яблок - " + eatten_Apple_big);
+        System.out.println(" кусочков сыра - " + eatten_Cheese);
+        System.out.println(" Десертов с мороженым и шоколадом - " + eatten_Dessert1);
+        System.out.println(" Десертов с клубникой и шоколадом - " + eatten_Dessert2);
+        System.out.println(" Десертов с мороженым и клубникой - " + eatten_Dessert3);
     }
 }
