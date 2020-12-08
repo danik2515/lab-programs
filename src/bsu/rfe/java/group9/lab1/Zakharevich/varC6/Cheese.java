@@ -15,7 +15,7 @@ public class Cheese extends Food {
 
     public void consume()           // реализация метода consume (что произошло с объектом)
     {
-        System.out.println(this + " съеден");
+        System.out.print(this + " съеден");
     }
 
 }

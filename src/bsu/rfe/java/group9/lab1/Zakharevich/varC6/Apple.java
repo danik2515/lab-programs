@@ -50,7 +50,7 @@ public class Apple extends Food
 
     public void consume()           // реализация метода consume (что произошло с объектом)
     {
-        System.out.println(this + " съедено");
+        System.out.print(this + " съедено");
     }
 
     public String toString()       // переопределение метода преобразования в строку
