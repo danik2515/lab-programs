@@ -33,10 +33,11 @@ public class MainFrame extends JFrame {
 // Создать меню
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-        JMenu ballMenu = new JMenu("Мячи");
-        Action addBallAction = new AbstractAction("Добавить мяч") {
+        JMenu ballMenu = new JMenu("Игра");
+        Action addBallAction = new AbstractAction("Начать") {
             public void actionPerformed(ActionEvent event) {
                 field.addBall();
+                field.addRacket();
                 if (!pauseMenuItem.isEnabled() &&
                         !resumeMenuItem.isEnabled()) {
 // Ни один из пунктов меню не являются
@@ -45,6 +46,7 @@ public class MainFrame extends JFrame {
                 }
             }
         };
+
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
         JMenu controlMenu = new JMenu("Управление");
@@ -69,6 +71,7 @@ public class MainFrame extends JFrame {
         resumeMenuItem.setEnabled(false);
 // Добавить в центр граничной компоновки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
+
     }
     // Главный метод приложения
     public static void main(String[] args) {

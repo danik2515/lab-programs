@@ -14,6 +14,7 @@ public class Field extends JPanel {
     private boolean paused;
     // Динамический список скачущих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
+    private ArrayList<Racket> racket = new ArrayList<Racket>(10);
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
 // При создании его экземпляра используется анонимный класс,
 // реализующий интерфейс ActionListener
@@ -39,6 +40,9 @@ public class Field extends JPanel {
         for (BouncingBall ball: balls) {
             ball.paint(canvas);
         }
+        for (Racket rac: racket) {
+            rac.paint(canvas);
+        }
     }
     // Метод добавления нового мяча в список
     public void addBall() {
@@ -46,6 +50,10 @@ public class Field extends JPanel {
 // Всю инициализацию положения, скорости, размера, цвета
 // BouncingBall выполняет сам в конструкторе
         balls.add(new BouncingBall(this));
+    }
+    public void addRacket() {
+
+        racket.add(new Racket(this));
     }
 
     // Метод синхронизированный, т.е. только один поток может
