@@ -60,6 +60,7 @@ public class  BouncingBall implements Runnable {
 // Если движение разрешено - управление будет
 // возвращено в метод
 // В противном случае - активный поток заснѐт
+                Thread.sleep(16-speed);
                 field.canMove(this);
                 if (x + speedX <= radius) {
 // Достигли левой стенки, отскакиваем право
@@ -80,6 +81,11 @@ public class  BouncingBall implements Runnable {
 // Достигли нижней стенки
                     speedY = -speedY;
                     y=new Double(field.getHeight()-radius).intValue();
+                }
+                if (y + speedY >= field.getYRocket() - radius && x>= field.getXRocket()&&x<= field.getWidthRocket()+ field.getXRocket()) {
+// Достигли нижней стенки
+                    speedY = -speedY;
+                    y=new Double(field.getYRocket()-radius).intValue();
                 } else {
 // Просто смещаемся
                     x += speedX;
@@ -90,7 +96,6 @@ public class  BouncingBall implements Runnable {
 // исходя из скорости
 // Скорость = 1 (медленно), засыпаем на 15 мс.
 // Скорость = 15 (быстро), засыпаем на 1 мс.
-                Thread.sleep(16-speed);
             }
         } catch (InterruptedException ex) {
 // Если нас прервали, то ничего не делаем

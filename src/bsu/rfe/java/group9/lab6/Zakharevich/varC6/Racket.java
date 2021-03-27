@@ -73,6 +73,9 @@ public class Racket implements Runnable {
     public Double getX(){
         return x;
     }
+    public Double getY(){
+        return y;
+    }
     public Double getWidth(){
         return new Double(width);
     }

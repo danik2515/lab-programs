@@ -55,7 +55,15 @@ public class Field extends JPanel {
 
         racket.add(new Racket(this));
     }
-
+    public Double getXRocket(){
+        return racket.get(0).getX();
+    }
+    public Double getYRocket(){
+        return racket.get(0).getY();
+    }
+    public Double getWidthRocket(){
+        return racket.get(0).getWidth();
+    }
     // Метод синхронизированный, т.е. только один поток может
 // одновременно быть внутри
     public synchronized void pause() {
