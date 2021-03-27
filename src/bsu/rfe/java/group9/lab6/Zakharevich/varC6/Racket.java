@@ -1,9 +1,15 @@
 package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
+
 public class Racket implements Runnable {
-    private static final int MAX_SPEED = 15;
+    private static final int MAX_SPEED = 20;
     private static final int HEIGHT = 15;
     private static final int WIDTH = 100;
     private Field field;
@@ -16,14 +22,13 @@ public class Racket implements Runnable {
     private int speed;
     // Конструктор класса BouncingBall
     public Racket(Field field) {
-// Необходимо иметь ссылку на поле, по которому прыгает мяч,
+
 // чтобы отслеживать выход за его пределы
 // через getWidth(), getHeight()
         this.field = field;
-// Радиус мяча случайного размера
+
         width =new Double(WIDTH).intValue();
         height=new Double(HEIGHT).intValue();
-// Абсолютное значение скорости зависит от диаметра мяча,
 // чем он больше, тем медленнее
         speed = new Double(5).intValue();
 
@@ -45,15 +50,6 @@ public class Racket implements Runnable {
 // Крутим бесконечный цикл, т.е. пока нас не прервут,
 // мы не намерены завершаться
             while(true) {
-// Синхронизация потоков на самом объекте поля
-// Если движение разрешено - управление будет
-// возвращено в метод
-// В противном случае - активный поток заснѐт
-
-// Засыпаем на X миллисекунд, где X определяется
-// исходя из скорости
-// Скорость = 1 (медленно), засыпаем на 15 мс.
-// Скорость = 15 (быстро), засыпаем на 1 мс.
                 Thread.sleep(16-speed);
             }
         } catch (InterruptedException ex) {
@@ -78,5 +74,15 @@ public class Racket implements Runnable {
     }
     public Double getWidth(){
         return new Double(width);
+    }
+    public void moveLeft(){
+        if(x>0){
+            x=x-MAX_SPEED;
+        }
+    }
+    public void moveRight() {
+        if (x< field.getSize().getWidth()-width) {
+            x = x + MAX_SPEED;
+        }
     }
 }

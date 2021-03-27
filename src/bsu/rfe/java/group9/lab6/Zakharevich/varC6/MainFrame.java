@@ -3,6 +3,9 @@ package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
@@ -19,6 +22,7 @@ public class MainFrame extends JFrame {
     private JMenuItem resumeMenuItem;
     // Поле, по которому прыгают мячи
     private Field field = new Field();
+
     // Конструктор главного окна приложения
     public MainFrame() {
         super("Программирование и синхронизация потоков");
@@ -30,6 +34,7 @@ public class MainFrame extends JFrame {
 // Установить начальное состояние окна развѐрнутым на весь экран
 
         setExtendedState(MAXIMIZED_BOTH);
+
 // Создать меню
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -71,12 +76,31 @@ public class MainFrame extends JFrame {
         resumeMenuItem.setEnabled(false);
 // Добавить в центр граничной компоновки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
+        addKeyListener(new KeyListener()
+        {
 
+
+            @Override
+            public void keyTyped(KeyEvent e){}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_LEFT)
+                    field.moveRocketLeft();
+                if(e.getKeyCode()==KeyEvent.VK_RIGHT)
+                    field.moveRocketRight();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e){}
+
+        });
     }
     // Главный метод приложения
     public static void main(String[] args) {
 // Создать и сделать видимым главное окно приложения
         MainFrame frame = new MainFrame();
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

@@ -3,11 +3,12 @@ package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 public class Field extends JPanel {
     // Флаг приостановленности движения
@@ -15,6 +16,8 @@ public class Field extends JPanel {
     // Динамический список скачущих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
     private ArrayList<Racket> racket = new ArrayList<Racket>(10);
+
+
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
 // При создании его экземпляра используется анонимный класс,
 // реализующий интерфейс ActionListener
@@ -24,13 +27,18 @@ public class Field extends JPanel {
             repaint();
         }
     });
+
     // Конструктор класса BouncingBall
     public Field() {
 // Установить цвет заднего фона белым
         setBackground(Color.WHITE);
 // Запустить таймер
         repaintTimer.start();
+
     }
+
+
+
     // Унаследованный от JPanel метод перерисовки компонента
     public void paintComponent(Graphics g) {
 // Вызвать версию метода, унаследованную от предка
@@ -63,6 +71,12 @@ public class Field extends JPanel {
     }
     public Double getWidthRocket(){
         return racket.get(0).getWidth();
+    }
+    public void moveRocketLeft(){
+        racket.get(0).moveLeft();
+    }
+    public void moveRocketRight(){
+        racket.get(0).moveRight();
     }
     // Метод синхронизированный, т.е. только один поток может
 // одновременно быть внутри
