@@ -41,8 +41,10 @@ public class MainFrame extends JFrame {
         JMenu ballMenu = new JMenu("Игра");
         Action addBallAction = new AbstractAction("Начать") {
             public void actionPerformed(ActionEvent event) {
+                field.Start();
                 field.addBall();
                 field.addRacket();
+                field.addRacketBot();
                 if (!pauseMenuItem.isEnabled() &&
                         !resumeMenuItem.isEnabled()) {
 // Ни один из пунктов меню не являются

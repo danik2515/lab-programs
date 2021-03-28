@@ -8,6 +8,7 @@ public class  BouncingBall implements Runnable {
     private static final int RADIUS = 10;
     // Максимальная скорость, с которой может летать мяч
     private static final int MAX_SPEED = 15;
+    private static final int START_SPEED = 5;
     private Field field;
     private int radius;
     private Color color;
@@ -32,12 +33,10 @@ public class  BouncingBall implements Runnable {
         if (speed>MAX_SPEED) {
             speed = MAX_SPEED;
         }
-// Начальное направление скорости тоже случайно,
-// угол в пределах от 0 до 2PI
-        double angle = Math.random()*2*Math.PI;
+
 // Вычисляются горизонтальная и вертикальная компоненты скорости
-        speedX = 8*Math.cos(angle);
-        speedY = 8*Math.sin(angle);
+
+        speedY = START_SPEED;
 // Цвет мяча выбирается случайно
         color = new Color((float)Math.random(), (float)Math.random(),
                 (float)Math.random());
@@ -73,18 +72,22 @@ public class  BouncingBall implements Runnable {
                     x=new Double(field.getWidth()-radius).intValue();
                 } else
                 if (y + speedY <= radius) {
-// Достигли верхней стенки
+                    field.Win();
+                    field.reset();
+                } else
+                if (y + speedY <= radius+field.getHeightRocket()&& x>= field.getXRocketBot()&&x<= field.getWidthRocket()+ field.getXRocketBot() ) {
+
                     speedY = -speedY;
-                    y = radius;
+                    speedX = 7*Math.random()-7*Math.random();
+                    y = radius + field.getHeightRocket();
                 } else
                 if (y + speedY >= field.getHeight() - radius) {
-// Достигли нижней стенки
-                    speedY = -speedY;
-                    y=new Double(field.getHeight()-radius).intValue();
+                    field.Lose();
+                    field.reset();
                 }
                 if (y + speedY >= field.getYRocket() - radius && x>= field.getXRocket()&&x<= field.getWidthRocket()+ field.getXRocket()) {
-// Достигли нижней стенки
                     speedY = -speedY;
+                    speedX = 7*Math.random()-7*Math.random();
                     y=new Double(field.getYRocket()-radius).intValue();
                 } else {
 // Просто смещаемся
@@ -110,6 +113,18 @@ public class  BouncingBall implements Runnable {
                 2*radius, 2*radius);
         canvas.draw(ball);
         canvas.fill(ball);
+    }
+    public Double getX(){
+        return x;
+    }
+    public void reset(){
+        if (field.getWin())
+        speedY = -START_SPEED;
+        else
+            speedY=START_SPEED;
+        x = field.getSize().getWidth()/2;
+        y = field.getSize().getHeight()/2;
+        speedX=0;
     }
 }
 

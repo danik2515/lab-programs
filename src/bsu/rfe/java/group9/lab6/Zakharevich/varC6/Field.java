@@ -8,15 +8,17 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
+
 
 public class Field extends JPanel {
     // Флаг приостановленности движения
     private boolean paused;
+    private boolean start=false;
     // Динамический список скачущих мячей
-    private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
-    private ArrayList<Racket> racket = new ArrayList<Racket>(10);
-
+    private BouncingBall balls;
+    private Racket racket;
+    private Racket racketBot;
+    private boolean win;
 
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
 // При создании его экземпляра используется анонимный класс,
@@ -44,12 +46,11 @@ public class Field extends JPanel {
 // Вызвать версию метода, унаследованную от предка
         super.paintComponent(g);
         Graphics2D canvas = (Graphics2D) g;
-// Последовательно запросить прорисовку от всех мячей из списка
-        for (BouncingBall ball: balls) {
-            ball.paint(canvas);
-        }
-        for (Racket rac: racket) {
-            rac.paint(canvas);
+// Последовательно запросить прорисовку от всех мячей из списка\
+        if(start) {
+            balls.paint(canvas);
+            racket.paint(canvas);
+            racketBot.paint(canvas);
         }
     }
     // Метод добавления нового мяча в список
@@ -57,26 +58,58 @@ public class Field extends JPanel {
 //Заключается в добавлении в список нового экземпляра BouncingBall
 // Всю инициализацию положения, скорости, размера, цвета
 // BouncingBall выполняет сам в конструкторе
-        balls.add(new BouncingBall(this));
+        balls= new BouncingBall(this);
+    }
+    public void Start(){
+        start = true;
     }
     public void addRacket() {
-
-        racket.add(new Racket(this));
+        racket=new Racket(this);
+    }
+    public void addRacketBot(){
+        racketBot=new Racket(this);
+        racketBot.setBot();
     }
     public Double getXRocket(){
-        return racket.get(0).getX();
+        return racket.getX();
     }
     public Double getYRocket(){
-        return racket.get(0).getY();
+        return racket.getY();
     }
     public Double getWidthRocket(){
-        return racket.get(0).getWidth();
+        return racket.getWidth();
     }
+    public Double getXRocketBot(){
+        return racketBot.getX();
+    }
+    public Double getHeightRocket(){
+        return racket.getHeight();
+    }
+    public Double getXBall(){
+        return balls.getX();
+    }
+
     public void moveRocketLeft(){
-        racket.get(0).moveLeft();
+        if(!paused)
+        racket.moveLeft();
     }
     public void moveRocketRight(){
-        racket.get(0).moveRight();
+        if(!paused)
+        racket.moveRight();
+    }
+    public void reset(){
+        balls.reset();
+        racket.reset();
+        racketBot.reset();
+    }
+    public boolean getWin(){
+        return win;
+    }
+    public void Win(){
+        win = true;
+    }
+    public void Lose(){
+        win = false;
     }
     // Метод синхронизированный, т.е. только один поток может
 // одновременно быть внутри
@@ -97,8 +130,12 @@ public class Field extends JPanel {
     public synchronized void canMove(BouncingBall ball) throws
             InterruptedException {
         if (paused) {
-// Если режим паузы включен, то поток, зашедший
-// внутрь данного метода, засыпает
+            wait();
+        }
+    }
+    public synchronized void canMove(Racket racket) throws
+            InterruptedException {
+        if (paused) {
             wait();
         }
     }

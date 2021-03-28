@@ -1,9 +1,7 @@
 package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 
-import javax.swing.*;
+
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
@@ -15,6 +13,8 @@ public class Racket implements Runnable {
     private Field field;
     private int width,height;
     private Color color;
+    private boolean bot = false;
+
     // Текущие координаты мяча
     private double x;
     private double y;
@@ -30,7 +30,7 @@ public class Racket implements Runnable {
         width =new Double(WIDTH).intValue();
         height=new Double(HEIGHT).intValue();
 // чем он больше, тем медленнее
-        speed = new Double(5).intValue();
+        speed = new Double(27).intValue();
 
 // Цвет мяча выбирается случайно
         color = new Color((float)Math.random(), (float)Math.random(),
@@ -50,7 +50,14 @@ public class Racket implements Runnable {
 // Крутим бесконечный цикл, т.е. пока нас не прервут,
 // мы не намерены завершаться
             while(true) {
-                Thread.sleep(16-speed);
+                Thread.sleep(30-speed);
+                field.canMove(this);
+                if(bot){
+                    if(field.getXBall()<=x+width/2)
+                    x=x-1;
+                    else if(field.getXBall()>x+width/2)
+                    x=x+1;
+                }
             }
         } catch (InterruptedException ex) {
 // Если нас прервали, то ничего не делаем
@@ -75,6 +82,7 @@ public class Racket implements Runnable {
     public Double getWidth(){
         return new Double(width);
     }
+    public Double getHeight() {return new Double(height);}
     public void moveLeft(){
         if(x>0){
             x=x-MAX_SPEED;
@@ -84,5 +92,16 @@ public class Racket implements Runnable {
         if (x< field.getSize().getWidth()-width) {
             x = x + MAX_SPEED;
         }
+    }
+    public void setBot(){
+        y=0;
+        bot=true;
+    }
+    public void reset(){
+        x = field.getSize().getWidth()/2;
+        if(bot)
+            y = 0;
+            else
+        y = field.getSize().getHeight()-HEIGHT;
     }
 }
