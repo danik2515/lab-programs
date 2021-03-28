@@ -1,10 +1,7 @@
 package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -19,6 +16,8 @@ public class Field extends JPanel {
     private Racket racket;
     private Racket racketBot;
     private boolean win;
+    private String ai = "0";
+    private String gamer= "0";
 
     // Класс таймер отвечает за регулярную генерацию событий ActionEvent
 // При создании его экземпляра используется анонимный класс,
@@ -46,11 +45,24 @@ public class Field extends JPanel {
 // Вызвать версию метода, унаследованную от предка
         super.paintComponent(g);
         Graphics2D canvas = (Graphics2D) g;
+        canvas.setFont(new Font("Serif", Font.BOLD, 36));
 // Последовательно запросить прорисовку от всех мячей из списка\
+        canvas.drawString(ai, 10, 36);
+        canvas.drawString(gamer, 10, (int)getSize().getHeight()-10);
         if(start) {
             balls.paint(canvas);
             racket.paint(canvas);
             racketBot.paint(canvas);
+        }
+        if(Integer.parseInt(ai)>=10){
+            canvas.setColor(Color.RED);
+            canvas.drawString("Победитель компьютер",(int)getSize().getWidth()/2-150,(int)getSize().getHeight()/2);
+            pause();
+        }
+        if(Integer.parseInt(gamer)>=10){
+            canvas.setColor(Color.RED);
+            canvas.drawString("Победитель игрок",(int)getSize().getWidth()/2-150,(int)getSize().getHeight()/2);
+            pause();
         }
     }
     // Метод добавления нового мяча в список
@@ -107,9 +119,15 @@ public class Field extends JPanel {
     }
     public void Win(){
         win = true;
+        int i = Integer.parseInt(gamer);
+        i++;
+        gamer = Integer.toString(i);
     }
     public void Lose(){
         win = false;
+        int i = Integer.parseInt(ai);
+        i++;
+        ai = Integer.toString(i);
     }
     // Метод синхронизированный, т.е. только один поток может
 // одновременно быть внутри

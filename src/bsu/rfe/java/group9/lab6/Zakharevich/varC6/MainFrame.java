@@ -1,7 +1,6 @@
 package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -20,6 +19,7 @@ public class MainFrame extends JFrame {
     private static final int HEIGHT = 500;
     private JMenuItem pauseMenuItem;
     private JMenuItem resumeMenuItem;
+    private JMenuItem startMenuItem;
     // Поле, по которому прыгают мячи
     private Field field = new Field();
 
@@ -45,6 +45,7 @@ public class MainFrame extends JFrame {
                 field.addBall();
                 field.addRacket();
                 field.addRacketBot();
+                ballMenu.setEnabled(false);
                 if (!pauseMenuItem.isEnabled() &&
                         !resumeMenuItem.isEnabled()) {
 // Ни один из пунктов меню не являются
@@ -53,7 +54,7 @@ public class MainFrame extends JFrame {
                 }
             }
         };
-
+        ballMenu.setEnabled(true);
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
         JMenu controlMenu = new JMenu("Управление");

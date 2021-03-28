@@ -4,7 +4,7 @@ package bsu.rfe.java.group9.lab6.Zakharevich.varC6;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
+
 
 public class Racket implements Runnable {
     private static final int MAX_SPEED = 20;
@@ -76,13 +76,9 @@ public class Racket implements Runnable {
     public Double getX(){
         return x;
     }
-    public Double getY(){
-        return y;
-    }
-    public Double getWidth(){
-        return new Double(width);
-    }
-    public Double getHeight() {return new Double(height);}
+    public Double getY(){ return y; }
+    public Double getWidth(){ return (double)width; }
+    public Double getHeight() {return (double)height;}
     public void moveLeft(){
         if(x>0){
             x=x-MAX_SPEED;
