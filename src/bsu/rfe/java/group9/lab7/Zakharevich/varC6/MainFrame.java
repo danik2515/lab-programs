@@ -525,6 +525,7 @@ public class MainFrame extends JFrame{
                 while(!fail){
                     Thread.sleep(100);
                 }
+                JOptionPane.showMessageDialog(frame, "Имя "+name+" занято", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 frame.setVisible(false);
                 frame=null;
                 name=null;
