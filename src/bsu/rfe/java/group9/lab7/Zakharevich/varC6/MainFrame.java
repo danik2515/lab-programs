@@ -236,7 +236,9 @@ public class MainFrame extends JFrame{
             }
             public void ancestorMoved(HierarchyEvent e) {}
         });
-
+        if(address!=null)
+            tabbedPane.setTabComponentAt(tabbedPane.getTabCount()-1,new ButtonTabComponent(tabbedPane,this,caption));
+        tabbedPane.setSelectedIndex(tabbedPane.getTabCount()-1);
     }
 
     private void sendMessage(String nick, String address, int port, JTextArea textAreaMsg, JTextArea textAreaHist) {
