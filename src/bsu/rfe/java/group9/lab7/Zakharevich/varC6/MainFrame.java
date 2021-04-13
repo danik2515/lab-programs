@@ -219,7 +219,7 @@ public class MainFrame extends JFrame{
             forall=textAreaHist;
         panel.setLayout(null);
         panel.add(btn);
-        btn.setSize(120,20);
+        btn.setSize(120,15);
         btn.setLocation(tabbedPane.getWidth()-150,tabbedPane.getHeight()-55);
         scrollPaneOutgoing.setLocation(10,10);
         scrollPaneOutgoing.setSize(tabbedPane.getWidth()-20,tabbedPane.getHeight()-150);
