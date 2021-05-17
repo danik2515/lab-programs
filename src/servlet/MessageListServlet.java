@@ -24,7 +24,10 @@ public class MessageListServlet extends ChatServlet {
             ChatMessage aMessage = messages.get(i);
             if(aMessage.getStyle().equals("simple")){
                 pw.println("<div><strong>"+ aMessage.getAuthor().getName() + "</strong> : "+ aMessage.getMessage() +  "</div>");}
-          
+            if(aMessage.getStyle().equals("whisper")){
+                pw.println("<div><strong>"+ aMessage.getAuthor().getName() + "</strong> : <em><small>"+ aMessage.getMessage() +  "</small></em></div>");}
+            if(aMessage.getStyle().equals("scream")){
+                pw.println("<div><strong>"+ aMessage.getAuthor().getName() + " :<style> .colortext { color:red;} </style> <big><big><big><span class=colortext>"+ aMessage.getMessage() +  "</span></big></big></big></strong></div>");}
         }
         pw.println("</body></html>");
     }
