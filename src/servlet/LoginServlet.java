@@ -139,7 +139,7 @@ public class LoginServlet extends ChatServlet {
             // Вернуть null, т.е. сообщений об ошибках нет
 
             synchronized (messages) {
-                ChatMessage str = new ChatMessage(systemMessage, aUser, Calendar.getInstance().getTimeInMillis());
+                ChatMessage str = new ChatMessage(systemMessage, aUser, Calendar.getInstance().getTimeInMillis(),"simple");
                 messages.add(str);
             }
 

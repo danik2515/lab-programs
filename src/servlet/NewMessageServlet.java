@@ -19,15 +19,15 @@ public class NewMessageServlet extends ChatServlet {
         request.setCharacterEncoding("UTF-8");
 
         String message = (String)request.getParameter("message");
+        String style = (String)request.getParameter("choice");
 
         if (message!=null && !"".equals(message)) {
 // По имени из сессии получить ссылку на объект ChatUser
-            ChatUser author = activeUsers.get((String)
-                    request.getSession().getAttribute("name"));
+            ChatUser author = activeUsers.get((String) request.getSession().getAttribute("name"));
             synchronized (messages) {
 // Добавить в список сообщений новое
                 messages.add(new ChatMessage(message, author,
-                        Calendar.getInstance().getTimeInMillis()));
+                        Calendar.getInstance().getTimeInMillis(),style));
             }
         }
 
