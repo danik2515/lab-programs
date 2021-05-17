@@ -1,5 +1,7 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+		pageEncoding="UTF-8"%>
 <%-- Импортировать JSTL-библиотеку --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%-- Импортировать собственную библиотеку тегов --%>
@@ -19,6 +21,27 @@
 <body>
 	<%-- Подключить заголовок страницы --%>
 	<jsp:include page="/static/header.jsp"></jsp:include>
+
+	<div class="w3-container w3-light-blue" style="float: right;">
+
+		<h2>Active Users</h2>
+
+	<%
+		/*List<String> names = (List<String>) request.getAttribute("userNames");*/
+		List<String> names = new ArrayList<String>();
+		
+		if (names != null && !names.isEmpty()) {
+
+			for (String s : names) {
+				out.println("<li class=w3-hover-sand>" + s + "</li>");
+			}
+			out.println("</ul>");
+
+		}
+	%>
+
+
+	</div>
 	<%-- Вставить кнопку создания нового объявления --%>
 	<my:newButton />
 	<h1>Личный кабинет</h1>
