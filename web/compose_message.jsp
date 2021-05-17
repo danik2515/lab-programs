@@ -12,5 +12,19 @@
     <a href="/lab8/logout.do" target="_top">quit chat</a>
     <br>
 </form>
+
+<form>
+    <div>
+        <input type="radio" id="Choice1" name="choice" checked = "checked">
+        <label for="Choice1">Simple</label>
+
+        <input type="radio" id="Choice2" name="choice">
+        <label for="Choice2">Whisper</label>
+
+        <input type="radio" id="Choice3" name="choice">
+        <label for="Choice3">Scream</label>
+    </div>
+
+</form>
 </body>
 </html>
