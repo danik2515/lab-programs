@@ -96,6 +96,19 @@
   		<rtexprvalue>true</rtexprvalue>
   	</attribute>
   </tag>
+	<tag>
+		<description>logout user</description>
+		<name>logout</name>
+		<tag-class>LabaTags.Logout</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>name</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+	</tag>
   <tag>
   	<description>description</description>
   	<name>updateAd</name>

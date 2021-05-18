@@ -15,4 +15,9 @@ public class UserActiveList {
         return activeUsers;
 
     }
+    public synchronized void removeUserActive(String user){
+
+        activeUsers.remove(user);
+
+    }
 }
