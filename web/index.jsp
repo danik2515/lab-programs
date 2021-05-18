@@ -11,6 +11,12 @@
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 </head>
 <body>
+<c:if test="${sessionScope.authUser!=null}">
+<div
+		style="background-color: #ccc; border: 1px solid black; float: right; margin: 10px; margin-top: 20px; padding: 5px 0px; text-align: center; width: 150px;">
+	<a href="<c:url value="/cabinet.jsp" />">В личный кабинет</a>
+</div>
+</c:if>
 	<%-- Подключить заголовок страницы --%>
 	<jsp:include page="/static/header.jsp"></jsp:include>
 	<h1>Главная страница</h1>

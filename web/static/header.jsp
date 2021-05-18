@@ -18,8 +18,10 @@
 		style="font-family: 'Trebuchet'; font-size: 30px; height: 53px; margin-left: 80px;">
 		Доска объявлений</div>
 </div>
+
 <%-- Панель отображается если пользователь аутентифицирован --%>
 <c:if test="${sessionScope.authUser!=null}">
+
 	<div style="background-color: #ccc; padding: 5px">
 		<div style="float: right; margin-right: 5px">
 

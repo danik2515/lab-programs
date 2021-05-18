@@ -21,6 +21,10 @@
 <meta http-equiv="Last-Modified" content="Fri, Jan 25 2099 23:59:59 GMT">
 </head>
 <body>
+<div
+		style="background-color: #ccc; border: 1px solid black; float: right; margin: 10px; margin-top: 20px; padding: 5px 0px; text-align: center; width: 150px;">
+	<a href="<c:url value="/index.jsp" />">На главную</a>
+</div>
 	<%-- Подключить заголовок страницы --%>
 	<jsp:include page="/static/header.jsp"></jsp:include>
 
