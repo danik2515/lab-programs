@@ -1,5 +1,7 @@
+<%@ page import="java.util.List" %>
+<%@ page import="LabaPacks.UserActiveList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+		pageEncoding="UTF-8"%>
 <%-- Импортировать JSTL-библиотеку --%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%-- Импортировать собственную библиотеку тегов --%>
@@ -20,7 +22,28 @@
 	<%-- Подключить заголовок страницы --%>
 	<jsp:include page="/static/header.jsp"></jsp:include>
 	<h1>Главная страница</h1>
+<div class="w3-container w3-light-blue" style="float: right;">
 
+	<h2>Active Users</h2>
+
+	<%
+		UserActiveList userActiveList = new UserActiveList();
+		List<String> names = userActiveList.getUserActive();
+
+
+
+		if (names != null && !names.isEmpty()) {
+
+			for (String s : names) {
+				out.println("<li class=w3-hover-sand>" + s + "</li>");
+			}
+			out.println("</ul>");
+
+		}
+	%>
+
+
+</div>
 	<%-- Вставить разметку 2-колоночной страницы --%>
 	<my:layout2Columns leftColumnWidth="68%" rightColumnWidth="28%">
 		<jsp:attribute name="leftColumnBody">
