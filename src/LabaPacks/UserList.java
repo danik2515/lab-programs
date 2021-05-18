@@ -1,7 +1,10 @@
 package LabaPacks;
-
+import javax.servlet.jsp.PageContext;
+import java.util.ArrayList;
+import java.util.List;
 public class UserList extends ListOfIdentifiables<User> {
     private static final long serialVersionUID = 7115985836992230188L;
+    private UserActiveList userActiveList = new UserActiveList();
 
     public synchronized User findUser(String login){
 
@@ -22,6 +25,7 @@ public class UserList extends ListOfIdentifiables<User> {
         }
         return null;
     }
+
 
     public synchronized User addUser(User user) throws UserExistsException {
 

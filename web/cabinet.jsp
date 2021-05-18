@@ -1,5 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="LabaPacks.UserList" %>
+<%@ page import="LabaPacks.UserActiveList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8"
 		pageEncoding="UTF-8"%>
 <%-- Импортировать JSTL-библиотеку --%>
@@ -27,9 +29,11 @@
 		<h2>Active Users</h2>
 
 	<%
-		/*List<String> names = (List<String>) request.getAttribute("userNames");*/
-		List<String> names = new ArrayList<String>();
-		
+		UserActiveList userActiveList = new UserActiveList();
+		List<String> names = userActiveList.getUserActive();
+
+
+
 		if (names != null && !names.isEmpty()) {
 
 			for (String s : names) {
